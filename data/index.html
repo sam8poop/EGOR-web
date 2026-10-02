@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EGOR</title>
+</head>
+
+<body>
+    <h1>hi world</h1>
+    <h2>test page :3</h2>
+    <button onclick="test_function()">Test Button</button>
+    <p id="num">0</p>
+</body>
+<script>
+    const socket = new WebSocket("ws://" + location.hostname + ":81");
+
+    async function test_function() {
+        const response = await fetch("/test_function");
+        const x = await response.text();
+
+        document.getElementById("num").textContent = x;
+    }
+</script>
+
+</html>
