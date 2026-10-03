@@ -55,9 +55,8 @@ void setup() {
 
   server.on("/test_function", []() {
     test_function();
-    server.send(200, "text/plain", String(x));
-
-            });
+    server.send(200, "text/plain", String(x));}
+  );
 
   server.begin();
   Serial.println("Web up");
