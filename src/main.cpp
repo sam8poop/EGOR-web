@@ -3,9 +3,12 @@
 #include <WebServer.h>
 #include <LittleFS.h>
 #include <WebSocketsServer.h>
+#include <Rotary_encoder.h>
 
+Rotary_encoder re(26, 27, 14);
 
 int x = 0;
+int last_pos = 0;
 WebSocketsServer webSocket = WebSocketsServer(81);
 WebServer server(80);
 
@@ -24,17 +27,25 @@ void webSocketEvent(
   if (type == WStype_DISCONNECTED) {
     Serial.println("Browser disconnected");
   }
-}
 
+}
+void send_pos() {
+  int pos = re.get_pos();
+  if (pos != last_pos) {
+    webSocket.broadcastTXT(String(pos).c_str());
+    last_pos = pos;
+  }
+}
 
 void setup() {
   pinMode(2, OUTPUT);
   Serial.begin(115200);
-
-  WiFi.softAP("EGOR", "l0new0lf");
+  re.begin();
+  
+  WiFi.softAP("EGOR", "passwood");
   Serial.print("IP address: ");
   Serial.println(WiFi.softAPIP());
-
+  
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
 
@@ -65,4 +76,5 @@ void setup() {
 void loop() {
   webSocket.loop();
   server.handleClient();
+  send_pos();
 }
